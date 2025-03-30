@@ -6,7 +6,7 @@ import time
 
 # 配置日志
 logging.basicConfig(
-    filename='git_auto_update.log',
+    filename=os.path.join(os.path.dirname(__file__), 'git_auto_update.log'),
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s: %(message)s'
 )
