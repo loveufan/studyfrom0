@@ -1,0 +1,18 @@
+285 INFO: PyInstaller: 6.12.0, contrib hooks: 2025.2
+286 INFO: Python: 3.13.2
+367 INFO: Platform: Windows-11-10.0.22631-SP0
+367 INFO: Python environment: C:\Users\21328\AppData\Local\Programs\Python\Python313
+368 INFO: wrote .\Git自动更新工具.spec
+371 INFO: Removing temporary files and cleaning cache in C:\Users\21328\AppData\Local\pyinstaller
+374 INFO: Module search paths (PYTHONPATH):
+['C:\\Users\\21328\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\pyinstaller.exe',
+ 'C:\\Users\\21328\\AppData\\Local\\Programs\\Python\\Python313\\python313.zip',
+ 'C:\\Users\\21328\\AppData\\Local\\Programs\\Python\\Python313\\DLLs',
+ 'C:\\Users\\21328\\AppData\\Local\\Programs\\Python\\Python313\\Lib',
+ 'C:\\Users\\21328\\AppData\\Local\\Programs\\Python\\Python313',
+ 'C:\\Users\\21328\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages',
+ 'C:\\Users\\21328\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\setuptools\\_vendor',
+ 'f:\\studyfrom0\\上传脚本']
+862 INFO: Appending 'datas' from .spec
+Unable to find 'f:\\studyfrom0\\上传脚本\\git_auto_update.log' when adding binary and data files.
+Press any key to continue . . .      
