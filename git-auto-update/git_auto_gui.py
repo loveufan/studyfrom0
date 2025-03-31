@@ -60,7 +60,8 @@ class GitAutoUpdater:
                 messagebox.showerror("错误", "未找到Git仓库，请检查项目路径！")
                 return False
             result = subprocess.run(command, cwd=repo_path,
-                                  capture_output=True, text=True, check=True)
+                                  capture_output=True, text=True, check=True,
+                                  encoding='utf-8', errors='ignore')
             logging.info(f"命令成功: {' '.join(command)}")
             return True
         except subprocess.CalledProcessError as e:
