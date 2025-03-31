@@ -15,17 +15,8 @@ class GitAutoUpdater:
         logging.basicConfig(filename=self.log_path, level=logging.INFO,
                           format='%(asctime)s - %(levelname)s: %(message)s')
         
-        # 设置默认路径
-        # 设置父级目录为默认路径
-        # 获取父级目录作为默认路径
-        default_path = os.path.dirname(os.path.dirname(__file__))
-        # 直接验证父级目录下的.git文件夹
-        if os.path.exists(os.path.join(default_path, '.git')):
-            self.project_path = default_path
-            self.path_label = tk.Label(self.root, text="当前路径：" + default_path)
-        else:
-            self.path_label = tk.Label(self.root, text="请选择Git仓库路径")
-            messagebox.showinfo("提示", "默认studyfrom0目录未找到Git项目，请手动选择")
+        # 路径初始化
+        self.path_label = tk.Label(self.root, text="请选择Git仓库路径")
         
         self.create_widgets()
 
@@ -37,7 +28,7 @@ class GitAutoUpdater:
         path_frame = tk.Frame(frame)
         path_frame.pack(fill='x', pady=5)
         
-        self.path_label = tk.Label(path_frame, text="当前路径：" + os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+        self.path_label = tk.Label(path_frame, text="当前路径：未选择")
         self.path_label.pack(side='left', padx=5)
         
         select_btn = tk.Button(path_frame, text="选择目录", command=self.select_directory,
