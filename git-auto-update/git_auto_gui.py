@@ -4,6 +4,7 @@ import subprocess
 import logging
 import os
 import threading
+import socket
 
 class GitAutoUpdater:
     def __init__(self):
@@ -39,6 +40,11 @@ class GitAutoUpdater:
                              width=15, height=2, bg="#4CAF50", fg="white")
         self.update_btn.pack(pady=10)
 
+        # 添加日志查看按钮
+        log_btn = tk.Button(frame, text="查看日志", command=self.open_log,
+                           width=15, height=2, bg="#FF9800", fg="white")
+        log_btn.pack(pady=10)
+
         exit_btn = tk.Button(frame, text="退出", command=self.root.destroy,
                            width=15, height=2, bg="#f44336", fg="white")
         exit_btn.pack(pady=10)
@@ -53,7 +59,40 @@ class GitAutoUpdater:
                 messagebox.showerror("错误", "所选目录不是Git仓库！")
                 delattr(self, 'project_path')
 
+    def check_network(self):
+        try:
+            socket.create_connection(("8.8.8.8", 53), timeout=3)
+            return True
+        except OSError:
+            logging.error("网络连接不可用")
+            return False
+
+    def check_git_conflicts(self):
+        try:
+            result = subprocess.run(['git', 'status', '--porcelain'],
+                                  cwd=self.project_path, capture_output=True, text=True)
+            if 'UU' in result.stdout:
+                logging.warning("检测到未解决的文件冲突")
+                return 'unmerged'
+            return 'ok'
+        except Exception as e:
+            logging.error(f"冲突检测失败: {str(e)}", exc_info=True)
+            messagebox.showerror("错误", f"冲突检查失败: {str(e)}")
+            return 'error'
+
     def run_git_command(self, command):
+        if not self.check_network():
+            messagebox.showerror("错误", "网络连接不可用，请检查网络设置")
+            return False
+        
+        # 检查文件冲突
+        conflict_status = self.check_git_conflicts()
+        if conflict_status == 'unmerged':
+            messagebox.showerror("错误", "存在未解决的文件冲突，请先处理冲突！")
+            return False
+        elif conflict_status == 'error':
+            return False
+
         try:
             if not hasattr(self, 'project_path'):
                 messagebox.showerror("错误", "请先选择项目目录！")
@@ -68,8 +107,12 @@ class GitAutoUpdater:
             logging.info(f"命令成功: {' '.join(command)}")
             return True
         except subprocess.CalledProcessError as e:
-            logging.error(f"错误: {e.stderr}")
-            messagebox.showerror("错误", f"执行失败: {e.stderr}")
+            logging.error(f"错误: {e.stderr}", exc_info=True)
+            messagebox.showerror("错误", f"执行失败: {e.stderr}\n详细日志请查看：{self.log_path}")
+            return False
+        except Exception as e:
+            logging.error("未预期的错误", exc_info=True)
+            messagebox.showerror("错误", f"发生未预期错误：{str(e)}")
             return False
 
     def update_repo(self):
@@ -91,6 +134,14 @@ class GitAutoUpdater:
         finally:
             self.root.after(0, lambda: self.update_btn.config(state='normal'))
         logging.info("仓库更新完成")
+
+    def open_log(self):
+        try:
+            os.startfile(self.log_path)
+        except FileNotFoundError:
+            messagebox.showerror("错误", "日志文件未找到！")
+        except Exception as e:
+            messagebox.showerror("错误", f"打开日志失败：{str(e)}")
 
 if __name__ == "__main__":
     # 确保日志文件存在
